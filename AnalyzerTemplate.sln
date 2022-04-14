@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate.Package", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate.Test", "AnalyzerTemplate\AnalyzerTemplate.Test\AnalyzerTemplate.Test.csproj", "{4238F7DC-700E-46D2-B1EA-2C2A70E2F210}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate.Vsix", "AnalyzerTemplate\AnalyzerTemplate.Vsix\AnalyzerTemplate.Vsix.csproj", "{20877B67-5C15-4135-AE56-40FB80DFBB26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate.Vsix", "AnalyzerTemplate\AnalyzerTemplate.Vsix\AnalyzerTemplate.Vsix.csproj", "{2F388774-7846-4C08-BAB0-53682F511440}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,10 +35,10 @@ Global
 		{4238F7DC-700E-46D2-B1EA-2C2A70E2F210}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4238F7DC-700E-46D2-B1EA-2C2A70E2F210}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4238F7DC-700E-46D2-B1EA-2C2A70E2F210}.Release|Any CPU.Build.0 = Release|Any CPU
-		{20877B67-5C15-4135-AE56-40FB80DFBB26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{20877B67-5C15-4135-AE56-40FB80DFBB26}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{20877B67-5C15-4135-AE56-40FB80DFBB26}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{20877B67-5C15-4135-AE56-40FB80DFBB26}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F388774-7846-4C08-BAB0-53682F511440}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F388774-7846-4C08-BAB0-53682F511440}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F388774-7846-4C08-BAB0-53682F511440}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F388774-7846-4C08-BAB0-53682F511440}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
