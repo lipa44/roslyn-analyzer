@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate.Test", "An
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate.Vsix", "AnalyzerTemplate\AnalyzerTemplate.Vsix\AnalyzerTemplate.Vsix.csproj", "{2F388774-7846-4C08-BAB0-53682F511440}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTestCasesForExtensionTesting", "AnalyzerTestCasesForExtensionTesting\AnalyzerTestCasesForExtensionTesting.csproj", "{44512987-440F-4D8F-8012-E9C575F3E2FB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{2F388774-7846-4C08-BAB0-53682F511440}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2F388774-7846-4C08-BAB0-53682F511440}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2F388774-7846-4C08-BAB0-53682F511440}.Release|Any CPU.Build.0 = Release|Any CPU
+		{44512987-440F-4D8F-8012-E9C575F3E2FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{44512987-440F-4D8F-8012-E9C575F3E2FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{44512987-440F-4D8F-8012-E9C575F3E2FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{44512987-440F-4D8F-8012-E9C575F3E2FB}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
