@@ -63,28 +63,56 @@ namespace AnalyzerTemplate
             var leftType = leftTypeInfo.Type.TypeKind;
             var rightType = leftTypeInfo.Type.TypeKind;
 
+            var ifLeftOverridesEquality = IfTypeOverridesOperator(leftTypeInfo.Type, "op_Equality");
+            var ifRightOverridesEquality = IfTypeOverridesOperator(rightTypeInfo.Type, "op_Equality");
+
+            var ifLeftOverridesEqualityInBase = IfTypeOverridesOperatorInBaseType(leftTypeInfo.Type, "op_Equality");
+            var ifRightOverridesEqualityInBase = IfTypeOverridesOperatorInBaseType(rightTypeInfo.Type, "op_Equality");
+
             var ifLeftOverridesEquals = IfTypeOverridesMethod(leftTypeInfo, nameof(Equals));
             var ifRightOverridesEquals = IfTypeOverridesMethod(rightTypeInfo, nameof(Equals));
 
-            if (ifRightOverridesEquals && ifLeftOverridesEquals)
+            var newExpression = InvocationExpression(
+                    MemberAccessExpression(
+                        SyntaxKind.SimpleMemberAccessExpression,
+                        IdentifierName(leftSymbolInfo.Symbol.Name),
+                        IdentifierName(nameof(Equals))))
+                .WithArgumentList(
+                    ArgumentList(
+                        SingletonSeparatedList(
+                            Argument(
+                                IdentifierName(rightSymbolInfo.Symbol.Name)))));
+
+            var newRoot = root.ReplaceNode(equalsOperation.Syntax, newExpression);
+
+            return await Task.FromResult(document.WithSyntaxRoot(newRoot));
+        }
+
+        public bool IfTypeOverridesOperator(ITypeSymbol typeInfo, string operatorName)
+        {
+            var typeMethods = typeInfo.GetMembers();
+
+            if (typeMethods.IsDefaultOrEmpty) return false;
+
+            var neededOperator = typeMethods.SingleOrDefault(m => m.Name == operatorName) as IMethodSymbol;
+
+            return neededOperator != null;
+        }
+
+        public bool IfTypeOverridesOperatorInBaseType(ITypeSymbol typeInfo, string operatorName)
+        {
+            if (IfTypeOverridesOperator(typeInfo, operatorName)) return true;
+
+            var baseType = typeInfo.BaseType;
+
+            while (baseType != null && baseType.Name != nameof(Object))
             {
-                var newExpression = InvocationExpression(
-                        MemberAccessExpression(
-                            SyntaxKind.SimpleMemberAccessExpression,
-                            IdentifierName(leftSymbolInfo.Symbol.Name),
-                            IdentifierName(nameof(Equals))))
-                    .WithArgumentList(
-                        ArgumentList(
-                            SingletonSeparatedList(
-                                Argument(
-                                    IdentifierName(rightSymbolInfo.Symbol.Name)))));
+                if (IfTypeOverridesOperator(baseType, operatorName)) return true;
 
-                var newRoot = root.ReplaceNode(equalsOperation.Syntax, newExpression);
-
-                return await Task.FromResult(document.WithSyntaxRoot(newRoot));
+                baseType = baseType.BaseType;
             }
 
-            return await Task.FromResult(document);
+            return false;
         }
 
         public bool IfTypeOverridesMethod(TypeInfo typeInfo, string methodName)
@@ -95,7 +123,7 @@ namespace AnalyzerTemplate
 
             var equalsMethod = typeMethods.SingleOrDefault(m => m.Name == methodName) as IMethodSymbol;
 
-            return equalsMethod?.IsOverride ?? false;
+            return !(equalsMethod?.OverriddenMethod is null);
         }
 
         public bool Overrides(MethodInfo baseMethod, Type type)

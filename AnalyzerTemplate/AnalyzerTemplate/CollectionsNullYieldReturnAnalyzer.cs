@@ -35,15 +35,15 @@ namespace AnalyzerTemplate
         {
             var methodDeclaration = context.Node as MethodDeclarationSyntax;
 
-            var methodReturnStatements = methodDeclaration?.Body.DescendantNodes()
+            var methodReturnStatements = methodDeclaration?.Body?.DescendantNodes()
                 .OfType<YieldStatementSyntax>()
                 .ToList();
 
-            var nullLiteralExpressions = methodReturnStatements?
+            if (methodReturnStatements is null || !methodReturnStatements.Any()) return;
+
+            var nullLiteralExpressions = methodReturnStatements
                 .Where(s => s.Expression.IsKind(SyntaxKind.NullLiteralExpression))
                 .ToList();
-
-            if (nullLiteralExpressions is null) return;
 
             foreach (var nullLiteralExpr in nullLiteralExpressions)
             {

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.CodeRefactorings;
 using Microsoft.CodeAnalysis.Testing;
 
-namespace AnalyzerTemplate.Test
+namespace AnalyzerTemplate.Test.Verifiers
 {
     public static partial class VisualBasicCodeRefactoringVerifier<TCodeRefactoring>
         where TCodeRefactoring : CodeRefactoringProvider, new()
