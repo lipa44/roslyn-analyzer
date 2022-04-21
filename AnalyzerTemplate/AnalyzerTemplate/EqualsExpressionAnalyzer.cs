@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Immutable;
-using System.Linq;
+﻿using System.Collections.Immutable;
+using AnalyzerTemplate.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -47,8 +46,8 @@ namespace AnalyzerTemplate
             var leftTypeKind = leftTypeInfo.Type.TypeKind;
             var rightTypeKind = rightTypeInfo.Type.TypeKind;
 
-            var ifLeftOverridesEquality = IfTypeOverridesOperator(leftTypeInfo.Type, "op_Equality");
-            var ifRightOverridesEquality = IfTypeOverridesOperator(rightTypeInfo.Type, "op_Equality");
+            var ifLeftOverridesEquality = AnalyzerTemplateExtensions.IfTypeOverridesOperator(leftTypeInfo.Type, "op_Equality");
+            var ifRightOverridesEquality = AnalyzerTemplateExtensions.IfTypeOverridesOperator(rightTypeInfo.Type, "op_Equality");
 
             if (leftTypeKind != rightTypeKind) return;
             if (leftTypeKind == TypeKind.Interface || rightTypeKind == TypeKind.Interface) return;
@@ -60,49 +59,8 @@ namespace AnalyzerTemplate
 
             var equalsOperation = context.SemanticModel.GetOperation(equalsBinaryExpressionSyntax);
 
-            var leftSymbolInfo = context.SemanticModel.GetPreprocessingSymbolInfo(left);
-            var rightSymbolInfo = context.SemanticModel.GetPreprocessingSymbolInfo(right);
-
             context.ReportDiagnostic(Diagnostic
-                .Create(Rule, equalsBinaryExpressionSyntax.GetLocation(), Category));
-        }
-
-        public static bool IfTypeOverridesOperator(ITypeSymbol typeInfo, string operatorName)
-        {
-            var typeMethods = typeInfo.GetMembers();
-
-            if (typeMethods.IsDefaultOrEmpty) return false;
-
-            var neededOperator = typeMethods.SingleOrDefault(m => m.Name == operatorName) as IMethodSymbol;
-
-            return neededOperator != null;
-        }
-
-        public static bool IfTypeOverridesOperatorInBaseType(ITypeSymbol typeInfo, string operatorName)
-        {
-            if (IfTypeOverridesOperator(typeInfo, operatorName)) return true;
-
-            var baseType = typeInfo.BaseType;
-
-            while (baseType != null && baseType.Name != nameof(Object))
-            {
-                if (IfTypeOverridesOperator(baseType, operatorName)) return true;
-
-                baseType = baseType.BaseType;
-            }
-
-            return false;
-        }
-
-        public static bool IfTypeOverridesMethod(TypeInfo typeInfo, string methodName)
-        {
-            var typeMethods = typeInfo.Type.GetMembers();
-
-            if (typeMethods.IsDefaultOrEmpty) return false;
-
-            var equalsMethod = typeMethods.SingleOrDefault(m => m.Name == methodName) as IMethodSymbol;
-
-            return !(equalsMethod?.OverriddenMethod is null);
+                .Create(Rule, equalsBinaryExpressionSyntax.GetLocation(), context.Node.ToString()));
         }
     }
 }

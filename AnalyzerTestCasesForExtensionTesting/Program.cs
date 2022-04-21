@@ -1,4 +1,6 @@
-﻿namespace AnalyzerTestCasesForExtensionTesting;
+﻿using System.Collections.Generic;
+
+namespace AnalyzerTestCasesForExtensionTesting;
 
 public class Program
 {
