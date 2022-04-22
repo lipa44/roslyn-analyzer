@@ -10,52 +10,29 @@ using VerifyEqualityCS = AnalyzerTemplate.Test.Verifiers.CSharpCodeFixVerifier<
     AnalyzerTemplate.EqualsExpressionAnalyzer,
     AnalyzerTemplate.EqualsExpressionFixProvider>;
 
-namespace AnalyzerTemplate.Test;
-
-[TestClass]
-public class AnalyzerTemplateUnitTest
+namespace AnalyzerTemplate.Test
 {
-    [TestMethod]
-    public async Task TestMethod1()
+    [TestClass]
+    public class AnalyzerTemplateUnitTest
     {
-        var test = @"";
-
-        await VerifyCS.VerifyAnalyzerAsync(test);
-    }
-
-    [TestMethod]
-    public async Task IfContainWrongCollectionReturnStatement()
-    {
-        var test = @"
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
-    using System.Diagnostics;
-
-    namespace AnalyzerTestCases;
-
-    public static class Program
-    {
-        public static void Main()
+        [TestMethod]
+        public async Task TestMethod1()
         {
-            HuiSosi1();
+            var test = @"";
+
+            await VerifyCS.VerifyAnalyzerAsync(test);
         }
 
-        public static List<int> HuiSosi1()
+        [TestMethod]
+        public async Task IfContainWrongCollectionReturnStatement()
         {
-            List<int> a = new List<int>();
-            Console.WriteLine(""SOSI HUI)))))"");
+            var test = @"";
 
-            |#0:return null|;
+            var expected = VerifyCS.Diagnostic("AnalyzerTemplate")
+                .WithLocation(0)
+                .WithArguments("return null");
+
+            Console.ReadLine();
         }
-    }";
-
-        var expected = VerifyCS.Diagnostic("AnalyzerTemplate")
-            .WithLocation(0)
-            .WithArguments("return null");
-
-        Console.ReadLine();
     }
 }
