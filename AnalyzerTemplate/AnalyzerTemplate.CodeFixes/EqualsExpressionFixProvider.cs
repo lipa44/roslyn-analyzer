@@ -18,8 +18,7 @@ namespace AnalyzerTemplate
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(EqualsExpressionFixProvider)), Shared]
     public class EqualsExpressionFixProvider : CodeFixProvider
     {
-        public sealed override ImmutableArray<string> FixableDiagnosticIds =>
-            ImmutableArray.Create(EqualsExpressionAnalyzer.DiagnosticId);
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(EqualsExpressionAnalyzer.DiagnosticId);
 
         public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 

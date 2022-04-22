@@ -39,24 +39,16 @@ namespace AnalyzerTemplate
 
             var method = returnExpression.FirstAncestorOrSelf<MethodDeclarationSyntax>();
 
+            ExpressionSyntax newReturnExpression;
             if (method.ReturnType.IsKind(SyntaxKind.ArrayType))
             {
                 var returnType = method.ReturnType as ArrayTypeSyntax;
 
-                var newReturnExpression = AnalyzerExtensions.CreateExpressionForArray(returnType);
-
-                var newRoot = root.ReplaceNode(returnExpression, newReturnExpression);
-
-                return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                newReturnExpression = AnalyzerExtensions.CreateExpressionForArray(returnType);
             }
-
-            if (method.ReturnType is GenericNameSyntax genericName && genericName.Identifier.Text == "List")
+            else if (method.ReturnType is GenericNameSyntax genericName && genericName.Identifier.Text == "List")
             {
-                var newReturnExpression = AnalyzerExtensions.CreateExpressionForList(genericName);
-
-                var newRoot = root.ReplaceNode(returnExpression, newReturnExpression);
-
-                return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                newReturnExpression = AnalyzerExtensions.CreateExpressionForList(genericName);
             }
             else
             {
@@ -64,12 +56,12 @@ namespace AnalyzerTemplate
 
                 var returnTypeWithoutList = genericName?.TypeArgumentList.Arguments.ToString();
 
-                var newReturnExpression = AnalyzerExtensions.CreateExpressionForUndefined(returnTypeWithoutList);
-
-                var newRoot = root.ReplaceNode(returnExpression, newReturnExpression);
-
-                return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                newReturnExpression = AnalyzerExtensions.CreateExpressionForUndefined(returnTypeWithoutList);
             }
+
+            var newRoot = root.ReplaceNode(returnExpression, newReturnExpression);
+
+            return Task.FromResult(document.WithSyntaxRoot(newRoot));
         }
     }
 }

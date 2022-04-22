@@ -11,12 +11,11 @@ namespace AnalyzerTemplate
     public class EqualsExpressionAnalyzer : DiagnosticAnalyzer
     {
         public const string DiagnosticId = "BadEqualsExpression";
+        private const string Category = "Unsafe equals expression";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.AnalyzerTitle), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
-        private const string Category = "Unsafe equals expression";
-
         private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
@@ -47,7 +46,8 @@ namespace AnalyzerTemplate
             var rightTypeKind = rightTypeInfo.Type.TypeKind;
 
             var ifLeftOverridesEquality = AnalyzerExtensions.IfTypeOverridesOperator(leftTypeInfo.Type, "op_Equality");
-            var ifRightOverridesEquality = AnalyzerExtensions.IfTypeOverridesOperator(rightTypeInfo.Type, "op_Equality");
+            var ifRightOverridesEquality =
+                AnalyzerExtensions.IfTypeOverridesOperator(rightTypeInfo.Type, "op_Equality");
 
             if (leftTypeKind != rightTypeKind) return;
             if (leftTypeKind == TypeKind.Interface || rightTypeKind == TypeKind.Interface) return;

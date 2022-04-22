@@ -16,8 +16,7 @@ namespace AnalyzerTemplate
     [ExportCodeFixProvider(LanguageNames.CSharp, Name = nameof(CollectionsNullYieldReturnCodeFixProvider)), Shared]
     public class CollectionsNullYieldReturnCodeFixProvider : CodeFixProvider
     {
-        public sealed override ImmutableArray<string> FixableDiagnosticIds =>
-            ImmutableArray.Create(CollectionsNullYieldReturnAnalyzer.DiagnosticId);
+        public sealed override ImmutableArray<string> FixableDiagnosticIds => ImmutableArray.Create(CollectionsNullYieldReturnAnalyzer.DiagnosticId);
 
         public sealed override FixAllProvider GetFixAllProvider() => WellKnownFixAllProviders.BatchFixer;
 
@@ -57,7 +56,7 @@ namespace AnalyzerTemplate
             else
             {
                 genericName = method.ReturnType as GenericNameSyntax;
-                
+
                 newReturnExpression = CreateExpressionForUndefined(genericName);
             }
 
@@ -70,7 +69,7 @@ namespace AnalyzerTemplate
         {
             var type = genericReturnType.TypeArgumentList.Arguments.ToString();
 
-            
+
             if (AnalyzerExtensions.IfTypeIsArray(type))
             {
                 var matches = new Regex(@"((?<ArrayType>(\S*))\[])").Matches(type);
@@ -85,9 +84,9 @@ namespace AnalyzerTemplate
 
                 var returnType = GenericName("List")
                     .WithTypeArgumentList(
-                    TypeArgumentList(
-                        SingletonSeparatedList<TypeSyntax>(
-                            IdentifierName(matches[0].Groups["ListType"].Value))));
+                        TypeArgumentList(
+                            SingletonSeparatedList<TypeSyntax>(
+                                IdentifierName(matches[0].Groups["ListType"].Value))));
 
                 return AnalyzerExtensions.CreateExpressionForList(returnType);
             }
