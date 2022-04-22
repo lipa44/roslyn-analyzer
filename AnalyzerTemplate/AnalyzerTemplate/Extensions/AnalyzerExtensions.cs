@@ -16,50 +16,12 @@ namespace AnalyzerTemplate.Extensions
         {
             if (returnType is null) return false;
 
-            if (returnType.IsKind(SyntaxKind.ArrayType)) return true;
-
-            var genericName = returnType as GenericNameSyntax;
-
-            return CollectionsList.Any(n => n.Equals(genericName?.Identifier.Text));
-
+            return returnType.IsKind(SyntaxKind.ArrayType) ||
+                   CollectionsList.Any(n => n.Equals((returnType as GenericNameSyntax)?.Identifier.Text));
         }
 
         public static bool IfTypeIsArray(string type) => type.Contains("[]");
         public static bool IfTypeIsList(string type) => type.Contains("List<") && type.Contains(">");
-
-        public static ArrayCreationExpressionSyntax CreateExpressionForArray(ArrayTypeSyntax arrayType)
-        {
-            return ArrayCreationExpression(
-                    arrayType
-                        .WithRankSpecifiers(
-                            SingletonList(
-                                ArrayRankSpecifier(
-                                    SingletonSeparatedList<ExpressionSyntax>(
-                                        OmittedArraySizeExpression())))))
-                .WithInitializer(
-                    InitializerExpression(
-                        SyntaxKind.ArrayInitializerExpression));
-        }
-
-        public static ObjectCreationExpressionSyntax CreateExpressionForList(GenericNameSyntax listType)
-        {
-            return ObjectCreationExpression(listType)
-                .WithArgumentList(ArgumentList());
-        }
-
-        public static InvocationExpressionSyntax CreateExpressionForUndefined(string type)
-        {
-            return InvocationExpression(
-                MemberAccessExpression(
-                    SyntaxKind.SimpleMemberAccessExpression,
-                    IdentifierName("Array"),
-                    GenericName(
-                            Identifier("Empty"))
-                        .WithTypeArgumentList(
-                            TypeArgumentList(
-                                SingletonSeparatedList<TypeSyntax>(
-                                    IdentifierName(type))))));
-        }
 
         public static bool IfTypeOverridesOperator(ITypeSymbol typeInfo, string operatorName)
         {

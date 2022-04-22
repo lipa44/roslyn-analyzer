@@ -1,6 +1,8 @@
-﻿using System.Collections.Immutable;
+﻿using System;
+using System.Collections.Immutable;
 using System.Composition;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using AnalyzerTemplate.Extensions;
 using Microsoft.CodeAnalysis;
@@ -8,6 +10,7 @@ using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace AnalyzerTemplate
 {
@@ -32,7 +35,7 @@ namespace AnalyzerTemplate
                 diagnostic);
         }
 
-        private Task<Document> AddEmptyCollectionAsync(Document document, Diagnostic diagnostic, SyntaxNode root)
+        private async Task<Document> AddEmptyCollectionAsync(Document document, Diagnostic diagnostic, SyntaxNode root)
         {
             var returnExpression = root.FindNode(diagnostic.Location.SourceSpan)
                 .FirstAncestorOrSelf<LiteralExpressionSyntax>();
@@ -42,26 +45,62 @@ namespace AnalyzerTemplate
             ExpressionSyntax newReturnExpression;
             if (method.ReturnType.IsKind(SyntaxKind.ArrayType))
             {
-                var returnType = method.ReturnType as ArrayTypeSyntax;
-
-                newReturnExpression = AnalyzerExtensions.CreateExpressionForArray(returnType);
+                newReturnExpression = CodeFixProviderExtensions.CreateExpressionForArray(method.ReturnType as ArrayTypeSyntax);
             }
             else if (method.ReturnType is GenericNameSyntax genericName && genericName.Identifier.Text == "List")
             {
-                newReturnExpression = AnalyzerExtensions.CreateExpressionForList(genericName);
+                newReturnExpression = CodeFixProviderExtensions.CreateExpressionForList(genericName);
             }
-            else
+            else if (returnExpression.IfContainsAncestor<ReturnStatementSyntax>())
             {
                 genericName = method.ReturnType as GenericNameSyntax;
 
                 var returnTypeWithoutList = genericName?.TypeArgumentList.Arguments.ToString();
 
-                newReturnExpression = AnalyzerExtensions.CreateExpressionForUndefined(returnTypeWithoutList);
+                newReturnExpression = CodeFixProviderExtensions.CreateExpressionForUndefined(returnTypeWithoutList);
+            }
+            else if (returnExpression.IfContainsAncestor<YieldStatementSyntax>())
+            {
+                newReturnExpression = CreateExpressionForUndefined(method.ReturnType as GenericNameSyntax);
+            }
+            else
+            {
+                throw new Exception("BAD ANALYZER!!!!");
             }
 
             var newRoot = root.ReplaceNode(returnExpression, newReturnExpression);
 
-            return Task.FromResult(document.WithSyntaxRoot(newRoot));
+            return await Task.FromResult(document.WithSyntaxRoot(newRoot));
+        }
+
+        private static ExpressionSyntax CreateExpressionForUndefined(GenericNameSyntax genericReturnType)
+        {
+            var type = genericReturnType.TypeArgumentList.Arguments.ToString();
+
+
+            if (AnalyzerExtensions.IfTypeIsArray(type))
+            {
+                var matches = new Regex(@"((?<ArrayType>(\S*))\[])").Matches(type);
+
+                var arrayType = ArrayType(ParseTypeName(matches[0].Groups["ArrayType"].Value));
+                return CodeFixProviderExtensions.CreateExpressionForArray(arrayType);
+            }
+
+            if (AnalyzerExtensions.IfTypeIsList(type))
+            {
+                var matches = new Regex(@"(List<(?<ListType>(\S*))>)").Matches(type);
+
+                var returnType = GenericName("List")
+                    .WithTypeArgumentList(
+                        TypeArgumentList(
+                            SingletonSeparatedList<TypeSyntax>(
+                                IdentifierName(matches[0].Groups["ListType"].Value))));
+
+                return CodeFixProviderExtensions.CreateExpressionForList(returnType);
+            }
+
+            return CodeFixProviderExtensions
+                .CreateExpressionForUndefined(new Regex(@"(([^\<]*)<(?<GenericType>(\S*))>)").Matches(type)[0].Groups["GenericType"].Value);
         }
     }
 }
