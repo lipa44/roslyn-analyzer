@@ -10,8 +10,7 @@ namespace AnalyzerTemplate.Extensions
 {
     public static class AnalyzerExtensions
     {
-        private static readonly List<string> CollectionsList = new List<string>
-            {"IEnumerable", "IList", "ICollection", "IReadOnlyCollection", "List", "IReadOnlyList", "SortedList"};
+        private static readonly List<string> CollectionsList = new() {"IEnumerable", "IList", "ICollection", "IReadOnlyCollection", "List", "IReadOnlyList", "SortedList"};
 
         public static bool IfTypeIsArrayOrCollection(TypeSyntax returnType)
         {
@@ -31,8 +30,7 @@ namespace AnalyzerTemplate.Extensions
         public static ArrayCreationExpressionSyntax CreateExpressionForArray(ArrayTypeSyntax arrayType)
         {
             return ArrayCreationExpression(
-                    ArrayType(
-                            IdentifierName(arrayType?.ElementType.ToString()))
+                    arrayType
                         .WithRankSpecifiers(
                             SingletonList(
                                 ArrayRankSpecifier(

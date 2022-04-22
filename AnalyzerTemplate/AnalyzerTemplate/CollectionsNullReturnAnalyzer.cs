@@ -17,7 +17,7 @@ namespace AnalyzerTemplate
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.AnalyzerTitle), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
         private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
-        private static readonly DiagnosticDescriptor Rule = new DiagnosticDescriptor(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description);
+        private static readonly DiagnosticDescriptor Rule = new (DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);
 
@@ -51,8 +51,7 @@ namespace AnalyzerTemplate
             foreach (var nullLiteralExpr in nullLiteralExpressions)
             {
                 context.ReportDiagnostic(Diagnostic
-                    .Create(Rule, nullLiteralExpr.Expression.GetLocation(),
-                        "Returning null instead of empty collection"));
+                    .Create(Rule, nullLiteralExpr.Expression.GetLocation(), nullLiteralExpr.ToString()));
             }
         }
     }
