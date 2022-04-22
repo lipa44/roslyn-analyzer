@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using VerifyEqualityCS = AnalyzerTemplate.Test.Verifiers.CSharpCodeFixVerifier<
+using VerifyEqualityCS = AnalyzerTemplate.Test.CSharpCodeFixVerifier<
     AnalyzerTemplate.EqualsExpressionAnalyzer,
     AnalyzerTemplate.EqualsExpressionFixProvider>;
 

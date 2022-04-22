@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using VerifyNullYieldReturnCS = AnalyzerTemplate.Test.Verifiers.CSharpCodeFixVerifier<
+using VerifyNullYieldReturnCS = AnalyzerTemplate.Test.CSharpCodeFixVerifier<
     AnalyzerTemplate.CollectionsNullReturnAnalyzer,
     AnalyzerTemplate.CollectionsNullReturnCodeFixProvider>;
 
