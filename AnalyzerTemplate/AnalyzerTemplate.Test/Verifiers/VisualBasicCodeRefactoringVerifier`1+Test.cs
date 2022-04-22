@@ -2,12 +2,13 @@
 using Microsoft.CodeAnalysis.Testing.Verifiers;
 using Microsoft.CodeAnalysis.VisualBasic.Testing;
 
-namespace AnalyzerTemplate.Test.Verifiers;
-
-public static partial class VisualBasicCodeRefactoringVerifier<TCodeRefactoring>
-    where TCodeRefactoring : CodeRefactoringProvider, new()
+namespace AnalyzerTemplate.Test.Verifiers
 {
-    public class Test : VisualBasicCodeRefactoringTest<TCodeRefactoring, MSTestVerifier>
+    public static partial class VisualBasicCodeRefactoringVerifier<TCodeRefactoring>
+        where TCodeRefactoring : CodeRefactoringProvider, new()
     {
+        public class Test : VisualBasicCodeRefactoringTest<TCodeRefactoring, MSTestVerifier>
+        {
+        }
     }
 }

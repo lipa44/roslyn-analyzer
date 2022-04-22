@@ -2,24 +2,25 @@
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing.Verifiers;
 
-namespace AnalyzerTemplate.Test.Verifiers;
-
-public static partial class CSharpCodeRefactoringVerifier<TCodeRefactoring>
-    where TCodeRefactoring : CodeRefactoringProvider, new()
+namespace AnalyzerTemplate.Test.Verifiers
 {
-    public class Test : CSharpCodeRefactoringTest<TCodeRefactoring, MSTestVerifier>
+    public static partial class CSharpCodeRefactoringVerifier<TCodeRefactoring>
+        where TCodeRefactoring : CodeRefactoringProvider, new()
     {
-        public Test()
+        public class Test : CSharpCodeRefactoringTest<TCodeRefactoring, MSTestVerifier>
         {
-            SolutionTransforms.Add((solution, projectId) =>
+            public Test()
             {
-                var compilationOptions = solution.GetProject(projectId).CompilationOptions;
-                compilationOptions = compilationOptions.WithSpecificDiagnosticOptions(
-                    compilationOptions.SpecificDiagnosticOptions.SetItems(CSharpVerifierHelper.NullableWarnings));
-                solution = solution.WithProjectCompilationOptions(projectId, compilationOptions);
+                SolutionTransforms.Add((solution, projectId) =>
+                {
+                    var compilationOptions = solution.GetProject(projectId).CompilationOptions;
+                    compilationOptions = compilationOptions.WithSpecificDiagnosticOptions(
+                        compilationOptions.SpecificDiagnosticOptions.SetItems(CSharpVerifierHelper.NullableWarnings));
+                    solution = solution.WithProjectCompilationOptions(projectId, compilationOptions);
 
-                return solution;
-            });
+                    return solution;
+                });
+            }
         }
     }
 }

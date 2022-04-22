@@ -3,25 +3,26 @@ using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Testing.Verifiers;
 
-namespace AnalyzerTemplate.Test.Verifiers;
-
-public static partial class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
-    where TAnalyzer : DiagnosticAnalyzer, new()
-    where TCodeFix : CodeFixProvider, new()
+namespace AnalyzerTemplate.Test.Verifiers
 {
-    public class Test : CSharpCodeFixTest<TAnalyzer, TCodeFix, MSTestVerifier>
+    public static partial class CSharpCodeFixVerifier<TAnalyzer, TCodeFix>
+        where TAnalyzer : DiagnosticAnalyzer, new()
+        where TCodeFix : CodeFixProvider, new()
     {
-        public Test()
+        public class Test : CSharpCodeFixTest<TAnalyzer, TCodeFix, MSTestVerifier>
         {
-            SolutionTransforms.Add((solution, projectId) =>
+            public Test()
             {
-                var compilationOptions = solution.GetProject(projectId).CompilationOptions;
-                compilationOptions = compilationOptions.WithSpecificDiagnosticOptions(
-                    compilationOptions.SpecificDiagnosticOptions.SetItems(CSharpVerifierHelper.NullableWarnings));
-                solution = solution.WithProjectCompilationOptions(projectId, compilationOptions);
+                SolutionTransforms.Add((solution, projectId) =>
+                {
+                    var compilationOptions = solution.GetProject(projectId).CompilationOptions;
+                    compilationOptions = compilationOptions.WithSpecificDiagnosticOptions(
+                        compilationOptions.SpecificDiagnosticOptions.SetItems(CSharpVerifierHelper.NullableWarnings));
+                    solution = solution.WithProjectCompilationOptions(projectId, compilationOptions);
 
-                return solution;
-            });
+                    return solution;
+                });
+            }
         }
     }
 }

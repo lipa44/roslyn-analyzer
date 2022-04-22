@@ -2,15 +2,16 @@
 using Microsoft.CodeAnalysis.Testing.Verifiers;
 using Microsoft.CodeAnalysis.VisualBasic.Testing;
 
-namespace AnalyzerTemplate.Test.Verifiers;
-
-public static partial class VisualBasicAnalyzerVerifier<TAnalyzer>
-    where TAnalyzer : DiagnosticAnalyzer, new()
+namespace AnalyzerTemplate.Test.Verifiers
 {
-    public class Test : VisualBasicAnalyzerTest<TAnalyzer, MSTestVerifier>
+    public static partial class VisualBasicAnalyzerVerifier<TAnalyzer>
+        where TAnalyzer : DiagnosticAnalyzer, new()
     {
-        public Test()
+        public class Test : VisualBasicAnalyzerTest<TAnalyzer, MSTestVerifier>
         {
+            public Test()
+            {
+            }
         }
     }
 }
