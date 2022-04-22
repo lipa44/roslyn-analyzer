@@ -10,23 +10,23 @@ using VerifyEqualityCS = AnalyzerTemplate.Test.Verifiers.CSharpCodeFixVerifier<
     AnalyzerTemplate.EqualsExpressionAnalyzer,
     AnalyzerTemplate.EqualsExpressionFixProvider>;
 
-namespace AnalyzerTemplate.Test
+namespace AnalyzerTemplate.Test;
+
+[TestClass]
+public class AnalyzerTemplateUnitTest
 {
-    [TestClass]
-    public class AnalyzerTemplateUnitTest
+    [TestMethod]
+    public async Task TestMethod1()
     {
-        [TestMethod]
-        public async Task TestMethod1()
-        {
-            var test = @"";
+        var test = @"";
 
-            await VerifyCS.VerifyAnalyzerAsync(test);
-        }
+        await VerifyCS.VerifyAnalyzerAsync(test);
+    }
 
-        [TestMethod]
-        public async Task IfContainWrongCollectionReturnStatement()
-        {
-            var test = @"
+    [TestMethod]
+    public async Task IfContainWrongCollectionReturnStatement()
+    {
+        var test = @"
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -52,11 +52,10 @@ namespace AnalyzerTemplate.Test
         }
     }";
 
-            var expected = VerifyCS.Diagnostic("AnalyzerTemplate")
-                .WithLocation(0)
-                .WithArguments("return null");
+        var expected = VerifyCS.Diagnostic("AnalyzerTemplate")
+            .WithLocation(0)
+            .WithArguments("return null");
 
-            Console.ReadLine();
-        }
+        Console.ReadLine();
     }
 }

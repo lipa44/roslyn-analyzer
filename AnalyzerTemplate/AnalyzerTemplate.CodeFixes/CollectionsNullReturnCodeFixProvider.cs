@@ -2,6 +2,7 @@
 using System.Composition;
 using System.Linq;
 using System.Threading.Tasks;
+using AnalyzerTemplate.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CodeActions;
 using Microsoft.CodeAnalysis.CodeFixes;
@@ -38,12 +39,37 @@ namespace AnalyzerTemplate
 
             var method = returnExpression.FirstAncestorOrSelf<MethodDeclarationSyntax>();
 
-            var newReturnExpression = SyntaxFactory.ObjectCreationExpression(method?.ReturnType)
-                .WithArgumentList(SyntaxFactory.ArgumentList());
+            if (method.ReturnType.IsKind(SyntaxKind.ArrayType))
+            {
+                var returnType = method.ReturnType as ArrayTypeSyntax;
 
-            var newRoot = root.ReplaceNode(returnExpression, newReturnExpression);
+                var newReturnExpression = AnalyzerExtensions.CreateExpressionForArray(returnType);
 
-            return Task.FromResult(document.WithSyntaxRoot(newRoot));
+                var newRoot = root.ReplaceNode(returnExpression, newReturnExpression);
+
+                return Task.FromResult(document.WithSyntaxRoot(newRoot));
+            }
+
+            if (method.ReturnType is GenericNameSyntax genericName && genericName.Identifier.Text == "List")
+            {
+                var newReturnExpression = AnalyzerExtensions.CreateExpressionForList(genericName);
+
+                var newRoot = root.ReplaceNode(returnExpression, newReturnExpression);
+
+                return Task.FromResult(document.WithSyntaxRoot(newRoot));
+            }
+            else
+            {
+                genericName = method.ReturnType as GenericNameSyntax;
+
+                var returnTypeWithoutList = genericName?.TypeArgumentList.Arguments.ToString();
+
+                var newReturnExpression = AnalyzerExtensions.CreateExpressionForUndefined(returnTypeWithoutList);
+
+                var newRoot = root.ReplaceNode(returnExpression, newReturnExpression);
+
+                return Task.FromResult(document.WithSyntaxRoot(newRoot));
+            }
         }
     }
 }

@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace AnalyzerTestCasesForExtensionTesting;
+﻿namespace AnalyzerTestCasesForExtensionTesting;
 
 public class Program
 {
@@ -62,7 +60,7 @@ public class Program
         yield return null;
     }
 
-    public static bool IfEqualWithOneOverride(StudentWithoutOverride s1, StudentWithOverride s2) => s1 == s2;
+/*    public static bool IfEqualWithOneOverride(StudentWithoutOverride s1, StudentWithOverride s2) => s1 == s2;
 
     public static bool IfEqualWithOneOverride(int s1, StudentWithOverride s2) => s1 == s2;
 
@@ -76,5 +74,5 @@ public class Program
 
     public static bool IfEqualOneWithOverride(OperatorBase s1, OperatorInherited s2) => s1 == s2;
 
-    public static bool IfEqualOneWithOverride(IAboba s1, IAboba s2) => s1 == s2;
+    public static bool IfEqualOneWithOverride(IAboba s1, IAboba s2) => s1 == s2;*/
 }

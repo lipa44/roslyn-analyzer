@@ -4,14 +4,14 @@ using VerifyEqualityCS = AnalyzerTemplate.Test.Verifiers.CSharpCodeFixVerifier<
     AnalyzerTemplate.EqualsExpressionAnalyzer,
     AnalyzerTemplate.EqualsExpressionFixProvider>;
 
-namespace AnalyzerTemplate.Test
+namespace AnalyzerTemplate.Test;
+
+public class EqualityOperationUnitTests
 {
-    public class EqualityOperationUnitTests
+    [TestMethod]
+    public async Task TwoClassesWithoutEqualityOverride_Diagnostic()
     {
-        [TestMethod]
-        public async Task TwoClassesWithoutEqualityOverride_Diagnostic()
-        {
-              var testCode = @"
+        var testCode = @"
       using System;
      
       namespace AnalyzerTestCases;
@@ -26,7 +26,7 @@ namespace AnalyzerTemplate.Test
           public static bool IfInterfacesEquals(StudentWithoutEqualsOverride s1, StudentWithoutEqualsOverride s2) => {|#0:s1 == s2|};
       }";
 
-            var fixedTestCode = @"
+        var fixedTestCode = @"
     using System;
    
     namespace AnalyzerTestCases;
@@ -41,12 +41,11 @@ namespace AnalyzerTemplate.Test
         public static bool IfInterfacesEquals(StudentWithoutEqualsOverride s1, StudentWithoutEqualsOverride s2) => s1.Equals(s2);
     }";
 
-            var expectedDiagnosticResult = VerifyEqualityCS
-                .Diagnostic(EqualsExpressionAnalyzer.DiagnosticId)
-                .WithArguments("s1 == s2")
-                .WithLocation(0);
+        var expectedDiagnosticResult = VerifyEqualityCS
+            .Diagnostic(EqualsExpressionAnalyzer.DiagnosticId)
+            .WithArguments("s1 == s2")
+            .WithLocation(0);
 
-            await VerifyEqualityCS.VerifyCodeFixAsync(testCode, expectedDiagnosticResult, fixedTestCode);
-        }
+        await VerifyEqualityCS.VerifyCodeFixAsync(testCode, expectedDiagnosticResult, fixedTestCode);
     }
 }

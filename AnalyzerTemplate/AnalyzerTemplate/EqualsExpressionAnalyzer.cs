@@ -46,8 +46,8 @@ namespace AnalyzerTemplate
             var leftTypeKind = leftTypeInfo.Type.TypeKind;
             var rightTypeKind = rightTypeInfo.Type.TypeKind;
 
-            var ifLeftOverridesEquality = AnalyzerTemplateExtensions.IfTypeOverridesOperator(leftTypeInfo.Type, "op_Equality");
-            var ifRightOverridesEquality = AnalyzerTemplateExtensions.IfTypeOverridesOperator(rightTypeInfo.Type, "op_Equality");
+            var ifLeftOverridesEquality = AnalyzerExtensions.IfTypeOverridesOperator(leftTypeInfo.Type, "op_Equality");
+            var ifRightOverridesEquality = AnalyzerExtensions.IfTypeOverridesOperator(rightTypeInfo.Type, "op_Equality");
 
             if (leftTypeKind != rightTypeKind) return;
             if (leftTypeKind == TypeKind.Interface || rightTypeKind == TypeKind.Interface) return;

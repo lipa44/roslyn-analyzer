@@ -1,5 +1,6 @@
 ﻿using System.Collections.Immutable;
 using System.Linq;
+using AnalyzerTemplate.Extensions;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -33,13 +34,16 @@ namespace AnalyzerTemplate
 
         public static void AnalyzeMethodWithCollectionAsYieldReturnType(SyntaxNodeAnalysisContext context)
         {
-            var methodDeclaration = context.Node as MethodDeclarationSyntax;
+            if (!(context.Node is MethodDeclarationSyntax methodDeclaration)) return;
 
-            var methodReturnStatements = methodDeclaration?.Body?.DescendantNodes()
+            if (!AnalyzerExtensions.IfTypeIsArrayOrCollection(methodDeclaration.ReturnType))
+                return;
+
+            var methodReturnStatements = methodDeclaration.Body?.DescendantNodes()
                 .OfType<YieldStatementSyntax>()
                 .ToList();
 
-            if (methodReturnStatements is null || !methodReturnStatements.Any()) return;
+            if (methodReturnStatements is null) return;
 
             var nullLiteralExpressions = methodReturnStatements
                 .Where(s => s.Expression.IsKind(SyntaxKind.NullLiteralExpression))
