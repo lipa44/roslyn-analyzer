@@ -33,22 +33,28 @@ namespace AnalyzerTemplate
 
         public static void AnalyzeMethodWithCollectionAsReturnType(SyntaxNodeAnalysisContext context)
         {
-            if (!(context.Node is MethodDeclarationSyntax methodDeclaration)) return;
+            if (context.Node is not MethodDeclarationSyntax methodDeclaration) return;
 
             if (!AnalyzerExtensions.IfTypeIsArrayOrCollection(methodDeclaration.ReturnType))
                 return;
 
-            var methodReturnStatements = methodDeclaration.Body?.DescendantNodes()
-                .OfType<ReturnStatementSyntax>()
-                .ToList();
+            if (methodDeclaration.Body is null) return;
 
-            if (methodReturnStatements is null) return;
+            var returnStatements = methodDeclaration.Body.DescendantNodes()
+                .OfType<ReturnStatementSyntax>();
 
-            var nullLiteralExpressions = methodReturnStatements
-                .Where(s => s.Expression.IsKind(SyntaxKind.NullLiteralExpression))
-                .ToList();
+            var yieldReturnStatements = methodDeclaration.Body.DescendantNodes()
+                .OfType<YieldStatementSyntax>();
 
-            foreach (var nullLiteralExpr in nullLiteralExpressions)
+            foreach (var nullLiteralExpr in returnStatements
+                         .Where(s => s.Expression.IsKind(SyntaxKind.NullLiteralExpression)))
+            {
+                context.ReportDiagnostic(Diagnostic
+                    .Create(Rule, nullLiteralExpr.Expression.GetLocation(), nullLiteralExpr.ToString()));
+            }
+
+            foreach (var nullLiteralExpr in yieldReturnStatements
+                         .Where(s => s.Expression.IsKind(SyntaxKind.NullLiteralExpression)))
             {
                 context.ReportDiagnostic(Diagnostic
                     .Create(Rule, nullLiteralExpr.Expression.GetLocation(), nullLiteralExpr.ToString()));

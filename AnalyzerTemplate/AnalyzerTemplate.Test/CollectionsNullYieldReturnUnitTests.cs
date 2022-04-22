@@ -2,8 +2,8 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using VerifyNullYieldReturnCS = AnalyzerTemplate.Test.Verifiers.CSharpCodeFixVerifier<
-    AnalyzerTemplate.CollectionsNullYieldReturnAnalyzer,
-    AnalyzerTemplate.CollectionsNullYieldReturnCodeFixProvider>;
+    AnalyzerTemplate.CollectionsNullReturnAnalyzer,
+    AnalyzerTemplate.CollectionsNullReturnCodeFixProvider>;
 
 namespace AnalyzerTemplate.Test
 {
@@ -37,7 +37,7 @@ public static class Test
 }";
 
             var expectedDiagnosticResult = VerifyNullYieldReturnCS
-                .Diagnostic(CollectionsNullYieldReturnAnalyzer.DiagnosticId)
+                .Diagnostic(CollectionsNullReturnAnalyzer.DiagnosticId)
                 .WithArguments("null")
                 .WithLocation(0);
 
@@ -70,7 +70,7 @@ public static class Test
 }";
 
             var expectedDiagnosticResult = VerifyNullYieldReturnCS
-                .Diagnostic(CollectionsNullYieldReturnAnalyzer.DiagnosticId)
+                .Diagnostic(CollectionsNullReturnAnalyzer.DiagnosticId)
                 .WithArguments("null")
                 .WithLocation(0);
 
@@ -100,7 +100,7 @@ public static class Test
 }";
 
             var expectedDiagnosticResult = VerifyNullYieldReturnCS
-                .Diagnostic(CollectionsNullYieldReturnAnalyzer.DiagnosticId)
+                .Diagnostic(CollectionsNullReturnAnalyzer.DiagnosticId)
                 .WithArguments("null")
                 .WithLocation(0);
 
@@ -130,7 +130,7 @@ public static class Test
 }";
 
             var expectedDiagnosticResult = VerifyNullYieldReturnCS
-                .Diagnostic(CollectionsNullYieldReturnAnalyzer.DiagnosticId)
+                .Diagnostic(CollectionsNullReturnAnalyzer.DiagnosticId)
                 .WithArguments("null")
                 .WithLocation(0);
 
