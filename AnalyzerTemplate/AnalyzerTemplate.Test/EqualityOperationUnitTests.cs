@@ -7,40 +7,41 @@ using VerifyEqualityCS = AnalyzerTemplate.Test.CSharpCodeFixVerifier<
 
 namespace AnalyzerTemplate.Test
 {
+    [TestClass]
     public class EqualityOperationUnitTests
     {
         [TestMethod]
         public async Task TwoClassesWithoutEqualityOverride_Diagnostic()
         {
             var testCode = @"
-      using System;
-     
-      namespace AnalyzerTestCases;
+using System;
 
-      public static class Test
-      {
-          public class StudentWithoutEqualsOverride
-          {
-              public int Age { get; set; }
-          }
+namespace AnalyzerTestCases;
 
-          public static bool IfInterfacesEquals(StudentWithoutEqualsOverride s1, StudentWithoutEqualsOverride s2) => {|#0:s1 == s2|};
-      }";
+public static class Test
+{
+    public class StudentWithoutEqualsOverride
+    {
+        public int Age { get; set; }
+    }
+
+    public static bool IfInterfacesEquals(StudentWithoutEqualsOverride s1, StudentWithoutEqualsOverride s2) => {|#0:s1 == s2|};
+}";
 
             var fixedTestCode = @"
-    using System;
-   
-    namespace AnalyzerTestCases;
+using System;
 
-    public static class Test
+namespace AnalyzerTestCases;
+
+public static class Test
+{
+    public class StudentWithoutEqualsOverride
     {
-        public class StudentWithoutEqualsOverride
-        {
-            public int Age { get; set; }
-        }
+        public int Age { get; set; }
+    }
 
-        public static bool IfInterfacesEquals(StudentWithoutEqualsOverride s1, StudentWithoutEqualsOverride s2) => s1.Equals(s2);
-    }";
+    public static bool IfInterfacesEquals(StudentWithoutEqualsOverride s1, StudentWithoutEqualsOverride s2) => s1.Equals(s2);
+}";
 
             var expectedDiagnosticResult = VerifyEqualityCS
                 .Diagnostic(EqualsExpressionAnalyzer.DiagnosticId)

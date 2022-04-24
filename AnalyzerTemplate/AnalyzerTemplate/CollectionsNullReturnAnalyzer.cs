@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.Linq;
 using AnalyzerTemplate.Extensions;
 using Microsoft.CodeAnalysis;

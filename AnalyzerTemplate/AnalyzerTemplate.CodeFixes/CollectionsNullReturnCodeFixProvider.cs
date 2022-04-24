@@ -30,7 +30,7 @@ namespace AnalyzerTemplate
             context.RegisterCodeFix(
                 CodeAction.Create(
                     title: CodeFixResources.NullCollectionsReturnTitle,
-                    createChangedDocument: c => AddEmptyCollectionAsync(context.Document, diagnostic, root),
+                    createChangedDocument: async c => await AddEmptyCollectionAsync(context.Document, diagnostic, root),
                     equivalenceKey: nameof(CodeFixResources.NullCollectionsReturnTitle)),
                 diagnostic);
         }
@@ -47,7 +47,7 @@ namespace AnalyzerTemplate
             {
                 newReturnExpression = CodeFixProviderExtensions.CreateExpressionForArray(method.ReturnType as ArrayTypeSyntax);
             }
-            else if (method.ReturnType is GenericNameSyntax genericName && genericName.Identifier.Text == "List")
+            else if (method.ReturnType is GenericNameSyntax {Identifier: {Text: "List"}} genericName)
             {
                 newReturnExpression = CodeFixProviderExtensions.CreateExpressionForList(genericName);
             }
@@ -76,7 +76,6 @@ namespace AnalyzerTemplate
         private static ExpressionSyntax CreateExpressionForUndefined(GenericNameSyntax genericReturnType)
         {
             var type = genericReturnType.TypeArgumentList.Arguments.ToString();
-
 
             if (AnalyzerExtensions.IfTypeIsArray(type))
             {

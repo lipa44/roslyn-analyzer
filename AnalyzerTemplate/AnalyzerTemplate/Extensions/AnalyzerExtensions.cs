@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using static Microsoft.CodeAnalysis.CSharp.SyntaxFactory;
 
 namespace AnalyzerTemplate.Extensions
 {
@@ -23,26 +23,30 @@ namespace AnalyzerTemplate.Extensions
         public static bool IfTypeIsArray(string type) => type.Contains("[]");
         public static bool IfTypeIsList(string type) => type.Contains("List<") && type.Contains(">");
 
-        public static bool IfTypeOverridesOperator(ITypeSymbol typeInfo, string operatorName)
+        public static bool IfTypeOverrides(ITypeSymbol typeInfo, string overrideName,
+            Func<IEnumerable<IMethodSymbol>, bool> comparer)
         {
             var typeMethods = typeInfo.GetMembers();
 
             if (typeMethods.IsDefaultOrEmpty) return false;
 
-            var neededOperator = typeMethods.SingleOrDefault(m => m.Name == operatorName) as IMethodSymbol;
+            var neededOperator = typeMethods
+                .Where(m => m.Name == overrideName)
+                .Select(m => m as IMethodSymbol);
 
-            return neededOperator != null;
+            return comparer(neededOperator);
         }
 
-        public static bool IfTypeOverridesOperatorInBaseType(ITypeSymbol typeInfo, string operatorName)
+        public static bool IfTypeOverridesInBaseType(ITypeSymbol typeInfo, string operatorName,
+            Func<IEnumerable<IMethodSymbol>, bool> comparer)
         {
-            if (IfTypeOverridesOperator(typeInfo, operatorName)) return true;
+            if (IfTypeOverrides(typeInfo, operatorName, comparer)) return true;
 
             var baseType = typeInfo.BaseType;
 
             while (baseType != null && baseType.Name != nameof(Object))
             {
-                if (IfTypeOverridesOperator(baseType, operatorName)) return true;
+                if (IfTypeOverrides(baseType, operatorName, comparer)) return true;
 
                 baseType = baseType.BaseType;
             }
@@ -50,15 +54,32 @@ namespace AnalyzerTemplate.Extensions
             return false;
         }
 
-        public static bool IfTypeOverridesMethod(TypeInfo typeInfo, string methodName)
+        public static bool Overrides(MethodInfo baseMethod, Type type)
         {
-            var typeMethods = typeInfo.Type.GetMembers();
+            if (baseMethod == null) return false;
+            if (type == null) return false;
+            if (!type.IsSubclassOf(baseMethod.ReflectedType)) return false;
 
-            if (typeMethods.IsDefaultOrEmpty) return false;
+            while (type != baseMethod.ReflectedType)
+            {
+                var methods = type.GetMethods(BindingFlags.Instance |
+                                              BindingFlags.DeclaredOnly |
+                                              BindingFlags.Public |
+                                              BindingFlags.NonPublic);
 
-            var equalsMethod = typeMethods.SingleOrDefault(m => m.Name == methodName) as IMethodSymbol;
+                if (methods.Any(m => m.GetBaseDefinition() == baseMethod))
+                    return true;
 
-            return !(equalsMethod?.OverriddenMethod is null);
+                type = type.BaseType;
+            }
+
+            return false;
         }
+
+        public static readonly Func<IEnumerable<IMethodSymbol>, bool> IfOverridesMethod =
+            methodSymbols => methodSymbols.Any(m => m.OverriddenMethod is not null);
+
+        public static readonly Func<IEnumerable<IMethodSymbol>, bool> IfOverridesOperator =
+            methodSymbols => methodSymbols.Any();
     }
 }
