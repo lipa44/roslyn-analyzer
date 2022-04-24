@@ -29,9 +29,9 @@ namespace AnalyzerTemplate
 
             context.RegisterCodeFix(
                 CodeAction.Create(
-                    title: CodeFixResources.CodeFixTitle,
+                    title: CodeFixResources.NullCollectionsReturnTitle,
                     createChangedDocument: c => AddEmptyCollectionAsync(context.Document, diagnostic, root),
-                    equivalenceKey: nameof(CodeFixResources.CodeFixTitle)),
+                    equivalenceKey: nameof(CodeFixResources.NullCollectionsReturnTitle)),
                 diagnostic);
         }
 

@@ -13,9 +13,9 @@ namespace AnalyzerTemplate
         public const string DiagnosticId = "UnsafeEqualsExpression";
         private const string Category = "Unsafe equals expression";
 
-        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.AnalyzerTitle), Resources.ResourceManager, typeof(Resources));
-        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormat), Resources.ResourceManager, typeof(Resources));
-        private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescription), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.AnalyzerTitleForUnsafeEqualityOperation), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString MessageFormat = new LocalizableResourceString(nameof(Resources.AnalyzerMessageFormatForUnsafeEqualityOperation), Resources.ResourceManager, typeof(Resources));
+        private static readonly LocalizableString Description = new LocalizableResourceString(nameof(Resources.AnalyzerDescriptionForUnsafeEqualityOperation), Resources.ResourceManager, typeof(Resources));
         private static readonly DiagnosticDescriptor Rule = new(DiagnosticId, Title, MessageFormat, Category, DiagnosticSeverity.Error, isEnabledByDefault: true, description: Description);
 
         public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics => ImmutableArray.Create(Rule);

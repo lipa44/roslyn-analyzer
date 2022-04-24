@@ -30,9 +30,9 @@ namespace AnalyzerTemplate
 
             context.RegisterCodeFix(
                 CodeAction.Create(
-                    title: CodeFixResources.CodeFixTitle,
+                    title: CodeFixResources.UnsafeEqualityOperationTitle,
                     createChangedDocument: c => FixEqualsExpression(context.Document, diagnostic, root),
-                    equivalenceKey: nameof(CodeFixResources.CodeFixTitle)),
+                    equivalenceKey: nameof(CodeFixResources.UnsafeEqualityOperationTitle)),
                 diagnostic);
         }
 
