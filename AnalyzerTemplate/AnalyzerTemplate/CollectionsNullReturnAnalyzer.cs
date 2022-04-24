@@ -1,4 +1,5 @@
-﻿using System.Collections.Immutable;
+﻿using System.Collections;
+using System.Collections.Immutable;
 using System.Linq;
 using AnalyzerTemplate.Extensions;
 using Microsoft.CodeAnalysis;
@@ -34,10 +35,7 @@ namespace AnalyzerTemplate
         public static void AnalyzeMethodWithCollectionAsReturnType(SyntaxNodeAnalysisContext context)
         {
             if (context.Node is not MethodDeclarationSyntax methodDeclaration) return;
-
-            if (!AnalyzerExtensions.IfTypeIsArrayOrCollection(methodDeclaration.ReturnType))
-                return;
-
+            if (!AnalyzerExtensions.IfTypeIsArrayOrCollection(methodDeclaration.ReturnType)) return;
             if (methodDeclaration.Body is null) return;
 
             var returnStatements = methodDeclaration.Body.DescendantNodes()

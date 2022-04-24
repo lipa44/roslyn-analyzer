@@ -10,7 +10,7 @@ namespace AnalyzerTemplate
     [DiagnosticAnalyzer(LanguageNames.CSharp)]
     public class EqualsExpressionAnalyzer : DiagnosticAnalyzer
     {
-        public const string DiagnosticId = "BadEqualsExpression";
+        public const string DiagnosticId = "UnsafeEqualsExpression";
         private const string Category = "Unsafe equals expression";
 
         private static readonly LocalizableString Title = new LocalizableResourceString(nameof(Resources.AnalyzerTitle), Resources.ResourceManager, typeof(Resources));
@@ -34,26 +34,20 @@ namespace AnalyzerTemplate
         {
             var semanticModel = context.SemanticModel;
 
-            if (!(context.Node is BinaryExpressionSyntax equalsBinaryExpressionSyntax)) return;
+            if (context.Node is not BinaryExpressionSyntax equalsBinaryExpressionSyntax) return;
 
-            var left = equalsBinaryExpressionSyntax.Left;
-            var right = equalsBinaryExpressionSyntax.Right;
-
-            var leftTypeInfo = semanticModel.GetTypeInfo(left);
-            var rightTypeInfo = semanticModel.GetTypeInfo(right);
-
-            var leftTypeKind = leftTypeInfo.Type.TypeKind;
-            var rightTypeKind = rightTypeInfo.Type.TypeKind;
-
-            var ifLeftOverridesEquality = AnalyzerExtensions.IfTypeOverridesOperator(leftTypeInfo.Type, "op_Equality");
-            var ifRightOverridesEquality =
-                AnalyzerExtensions.IfTypeOverridesOperator(rightTypeInfo.Type, "op_Equality");
+            var (leftExpression, rightExpression) = (equalsBinaryExpressionSyntax.Left, equalsBinaryExpressionSyntax.Right);
+            var (leftTypeInfo, rightTypeInfo) = (semanticModel.GetTypeInfo(leftExpression), semanticModel.GetTypeInfo(rightExpression));
+            var (leftTypeKind, rightTypeKind) = (leftTypeInfo.Type.TypeKind, rightTypeInfo.Type.TypeKind);
 
             if (leftTypeKind != rightTypeKind) return;
             if (leftTypeKind == TypeKind.Interface || rightTypeKind == TypeKind.Interface) return;
+            
+            var ifLeftOverridesEquality = AnalyzerExtensions.IfTypeOverridesOperator(leftTypeInfo.Type, "op_Equality");
+            var ifRightOverridesEquality = AnalyzerExtensions.IfTypeOverridesOperator(rightTypeInfo.Type, "op_Equality");
 
-            var condition = (ifLeftOverridesEquality && ifRightOverridesEquality
-                             || !ifLeftOverridesEquality && !ifRightOverridesEquality);
+            var condition = ifLeftOverridesEquality && ifRightOverridesEquality
+                            || !ifLeftOverridesEquality && !ifRightOverridesEquality;
 
             if (!condition) return;
 
