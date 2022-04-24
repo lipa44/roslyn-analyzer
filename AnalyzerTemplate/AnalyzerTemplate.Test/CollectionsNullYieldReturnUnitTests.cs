@@ -82,6 +82,8 @@ public static class Test
         public async Task ReturnTypeIEnumerableReturnsNull_Diagnostic()
         {
             var testCode = @"
+using System.Collections.Generic;
+
 public static class Test
 {
     public static IEnumerable<IEnumerable<int>> IEnumerableYieldReturnStatement()
@@ -91,6 +93,8 @@ public static class Test
 }";
 
             var fixedTestCode = @"
+using System.Collections.Generic;
+
 public static class Test
 {
     public static IEnumerable<IEnumerable<int>> IEnumerableYieldReturnStatement()
@@ -112,6 +116,8 @@ public static class Test
         public async Task ReturnTypeICollectionReturnsNull_Diagnostic()
         {
             var testCode = @"
+using System.Collections.Generic;
+
 public static class Test
 {
     public static IEnumerable<ICollection<int>> ICollectionYieldReturnStatement()
@@ -121,6 +127,8 @@ public static class Test
 }";
 
             var fixedTestCode = @"
+using System.Collections.Generic;
+
 public static class Test
 {
     public static IEnumerable<ICollection<int>> ICollectionYieldReturnStatement()

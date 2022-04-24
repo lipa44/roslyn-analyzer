@@ -46,5 +46,7 @@ namespace AnalyzerTemplate.Extensions
                                 SingletonSeparatedList<TypeSyntax>(
                                     IdentifierName(type))))));
         }
+        
+        // private static 
     }
 }
