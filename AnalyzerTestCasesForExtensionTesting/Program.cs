@@ -1,4 +1,4 @@
-﻿namespace AnalyzerTestCases;
+﻿namespace AnalyzerTestCasesForExtensionTesting;
 
 public class Program
 {
@@ -13,28 +13,33 @@ public class Program
     public class NotOverridenOperatorInherited : OverridenOperatorBase { }
     public class NotOverridenOperator { }
 
-    public class StudentWithEqualsOverride
+    public class StudentWithEqualityOverride
     {
         public int Age { get; set; }
 
-        public static bool operator ==(StudentWithEqualsOverride a, StudentWithEqualsOverride b) => false;
-        public static bool operator !=(StudentWithEqualsOverride a, StudentWithEqualsOverride b) => true;
+        public static bool operator ==(StudentWithEqualityOverride a, StudentWithEqualityOverride b) => false;
+        public static bool operator !=(StudentWithEqualityOverride a, StudentWithEqualityOverride b) => true;
         public override bool Equals(object? obj)
         {
             return false;
         }
     }
 
-    public class StudentWithoutEqualsOverride<T>
+    public class GenericStudent<T>
     {
         public T Age { get; set; }
+    }
+
+    public class StudentWithOverrideInBase : StudentWithEqualityOverride
+    {
+        public int Age { get; set; }
     }
 
     public static void Main()
     {
     }
 
-    public static StudentWithoutEqualsOverride<int> StudentReturnStatement()
+    public static GenericStudent<int> StudentReturnStatement()
     {
         return null;
     }
@@ -89,22 +94,17 @@ public class Program
         yield return null;
     }
 
-/*    public static bool IfEqualWithOneOverride(StudentWithoutEqualsOverride<int> s1, StudentWithEqualsOverride s2) => s1 == s2;
+    public bool IfEqualBothWithoutOverride(StudentWithOverrideInBase s1, StudentWithOverrideInBase s2) => s1 == s2; // ok
+    public bool IfEqualBothWithOverride(StudentWithEqualityOverride s1, StudentWithEqualityOverride s2) => s1 == s2; // ok
+    public bool IfEqualLeftWithOverride(StudentWithEqualityOverride s1, object s2) => s1 == s2; // ok
+    public bool IfEqualLeftWithOverrideInBase(StudentWithOverrideInBase s1, object s2) => s1 == s2; // ok
+    public bool IfEqualRightWithOverride(object s1, StudentWithEqualityOverride s2) => s1 == s2; // ok
+    public bool IfEqualBothWithoutOverrideOverride(object s1, object s2) => s1 == s2; // ok
+    public bool IfEqualStructs(int s1, int s2) => s1 == s2; // ok
 
-    public static bool IfEqualWithOneOverride(int s1, StudentWithEqualsOverride s2) => s1 == s2;
+    public bool IfEqualBothWithoutOverride(NotOverridenOperator s1, NotOverridenOperator s2) => s1 == s2; // ok
+    public bool IfEqualBothWithOverride(OverridenOperatorBase s1, OverridenOperatorBase s2) => s1 == s2; // ok
+    public bool IfEqualOneWithOverride(NotOverridenOperator s1, object s2) => s1 == s2;
 
-    public static bool IfEqualBothWithoutOverride(StudentWithoutEqualsOverride<int> s10, StudentWithoutEqualsOverride<int> s2) => s10 == s2;
-
-    public static bool IfEqualBothWithOverride(StudentWithEqualsOverride s10, StudentWithEqualsOverride s2) => s10 == s2;
-
-    public static bool IfEqualOneWithOverride(StudentWithEqualsOverride s1, StudentWithoutEqualsOverride<int> s2) => s1 == s2;
-
-    public static bool IfEqualOneWithOverride(StudentWithoutEqualsOverride<int> s1, StudentWithEqualsOverride s2) => s1 == s2;*/
-
-    public static bool IfEqualOneWithOverride(OverridenOperatorBase s1, NotOverridenOperatorInherited s2) => s1 == s2;
-    public static bool IfEqualOneWithOverride(NotOverridenOperatorInherited s1, OverridenOperatorBase s2) => s1 == s2;
-    public static bool IfEqualOneWithOverride(NotOverridenOperator s1, NotOverridenOperator s2) => s1 == s2;
-    public static bool IfEqualOneWithOverride(NotOverridenOperator s1, object s2) => s1 == s2;
-
-    public static bool IfEqualOneWithOverride(IAboba s1, IAboba s2) => s1 == s2;
+    public bool IfEqualInterfaces(IAboba i1, IAboba i2) => i1 == i2; // ok
 }

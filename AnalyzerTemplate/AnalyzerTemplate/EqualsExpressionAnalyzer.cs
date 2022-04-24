@@ -37,27 +37,26 @@ namespace AnalyzerTemplate
             if (context.Node is not BinaryExpressionSyntax equalsBinaryExpressionSyntax) return;
 
             var (leftExpression, rightExpression) = (equalsBinaryExpressionSyntax.Left, equalsBinaryExpressionSyntax.Right);
-            var (leftTypeInfo, rightTypeInfo) = (semanticModel.GetTypeInfo(leftExpression), semanticModel.GetTypeInfo(rightExpression));
-            var (leftTypeKind, rightTypeKind) = (leftTypeInfo.Type.TypeKind, rightTypeInfo.Type.TypeKind);
+            var (leftType, rightType) = (semanticModel.GetTypeInfo(leftExpression).Type, semanticModel.GetTypeInfo(rightExpression).Type);
+            var (leftTypeKind, rightTypeKind) = (leftType.TypeKind, rightType.TypeKind);
 
             if (leftTypeKind != rightTypeKind) return;
             if (leftTypeKind == TypeKind.Interface || rightTypeKind == TypeKind.Interface) return;
             
-            var ifLeftOverridesEquality = AnalyzerExtensions.IfTypeOverrides(leftTypeInfo.Type, "op_Equality", AnalyzerExtensions.IfOverridesOperator);
-            var ifRightOverridesEquality = AnalyzerExtensions.IfTypeOverrides(rightTypeInfo.Type, "op_Equality", AnalyzerExtensions.IfOverridesOperator);
+            var ifLeftOverridesEquality = AnalyzerExtensions.IfTypeOverrides(leftType, "op_Equality", AnalyzerExtensions.IfOverridesOperator);
+            var ifRightOverridesEquality = AnalyzerExtensions.IfTypeOverrides(rightType, "op_Equality", AnalyzerExtensions.IfOverridesOperator);
 
-            var ifLeftOverridesEqualityInBase = AnalyzerExtensions.IfTypeOverridesInBaseType(leftTypeInfo.Type, "op_Equality", AnalyzerExtensions.IfOverridesOperator);
-            var ifRightOverridesEqualityInBase = AnalyzerExtensions.IfTypeOverridesInBaseType(rightTypeInfo.Type, "op_Equality", AnalyzerExtensions.IfOverridesOperator);
+            var ifLeftOverridesEqualityInBase = AnalyzerExtensions.IfTypeOverridesInBaseType(leftType, "op_Equality", AnalyzerExtensions.IfOverridesOperator);
+            var ifRightOverridesEqualityInBase = AnalyzerExtensions.IfTypeOverridesInBaseType(rightType, "op_Equality", AnalyzerExtensions.IfOverridesOperator);
 
-            var ifLeftOverridesEquals = AnalyzerExtensions.IfTypeOverrides(leftTypeInfo.Type, nameof(Equals), AnalyzerExtensions.IfOverridesMethod);
-            var ifRightOverridesEquals = AnalyzerExtensions.IfTypeOverrides(rightTypeInfo.Type, nameof(Equals), AnalyzerExtensions.IfOverridesMethod);
+            var ifLeftOverridesEquals = AnalyzerExtensions.IfTypeOverrides(leftType, nameof(Equals), AnalyzerExtensions.IfOverridesMethod);
+            var ifRightOverridesEquals = AnalyzerExtensions.IfTypeOverrides(rightType, nameof(Equals), AnalyzerExtensions.IfOverridesMethod);
 
-            var condition = ifLeftOverridesEquality && ifRightOverridesEquality
-                            || !ifLeftOverridesEquality && !ifRightOverridesEquality;
+            var condition = leftTypeKind == TypeKind.Class && rightTypeKind == TypeKind.Class &&
+                            (!ifLeftOverridesEqualityInBase && !ifRightOverridesEqualityInBase ||
+                             !ifLeftOverridesEqualityInBase && ifRightOverridesEqualityInBase);
 
             if (!condition) return;
-
-            var equalsOperation = context.SemanticModel.GetOperation(equalsBinaryExpressionSyntax);
 
             context.ReportDiagnostic(Diagnostic
                 .Create(Rule, equalsBinaryExpressionSyntax.GetLocation(), context.Node.ToString()));

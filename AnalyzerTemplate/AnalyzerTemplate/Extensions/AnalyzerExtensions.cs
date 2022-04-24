@@ -26,6 +26,8 @@ namespace AnalyzerTemplate.Extensions
         public static bool IfTypeOverrides(ITypeSymbol typeInfo, string overrideName,
             Func<IEnumerable<IMethodSymbol>, bool> comparer)
         {
+            if (typeInfo.Name == nameof(Equals)) return false;
+
             var typeMethods = typeInfo.GetMembers();
 
             if (typeMethods.IsDefaultOrEmpty) return false;
