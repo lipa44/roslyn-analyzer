@@ -8,6 +8,16 @@
     - В том числе кейсы, где есть `yield return`
 2. Использование непереопределённого оператора `==` для сравнения типов (вместо `.Equals`)
 
+## Демо `.vsix`
+
+### Коллекции
+
+![collections-test](https://user-images.githubusercontent.com/82240296/177005917-bd99cb3e-9c1a-449b-b2f6-9f88521b89ff.gif)
+
+### `==` оператор
+
+![equality-test](https://user-images.githubusercontent.com/82240296/177006188-7ad24186-9529-4b8d-84c8-21647573a297.gif)
+
 ## Фиксы
 
 1. В случае, когда возвращаемый тип у коллекций - один из: [`IEnumerable`, `IList`, `ICollection`, `IReadOnlyCollection`, `List`, `IReadOnlyList`, `SortedList`] или `Array` и возвращается `null` вместо пустой коллекци
