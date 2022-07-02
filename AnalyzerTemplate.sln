@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32314.265
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate", "AnalyzerTemplate\AnalyzerTemplate\AnalyzerTemplate.csproj", "{222D058A-6844-4EA0-9DFC-052141EA4B06}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate", "Source\AnalyzerTemplate\AnalyzerTemplate\AnalyzerTemplate.csproj", "{222D058A-6844-4EA0-9DFC-052141EA4B06}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate.CodeFixes", "AnalyzerTemplate\AnalyzerTemplate.CodeFixes\AnalyzerTemplate.CodeFixes.csproj", "{CE3AFBD9-4E58-4C08-9C15-327F63691319}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate.CodeFixes", "Source\AnalyzerTemplate\AnalyzerTemplate.CodeFixes\AnalyzerTemplate.CodeFixes.csproj", "{CE3AFBD9-4E58-4C08-9C15-327F63691319}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate.Package", "AnalyzerTemplate\AnalyzerTemplate.Package\AnalyzerTemplate.Package.csproj", "{A4984373-2F31-4203-A095-A6DFE7B71FAE}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate.Package", "Source\AnalyzerTemplate\AnalyzerTemplate.Package\AnalyzerTemplate.Package.csproj", "{A4984373-2F31-4203-A095-A6DFE7B71FAE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate.Test", "AnalyzerTemplate\AnalyzerTemplate.Test\AnalyzerTemplate.Test.csproj", "{4238F7DC-700E-46D2-B1EA-2C2A70E2F210}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate.Test", "Source\AnalyzerTemplate\AnalyzerTemplate.Test\AnalyzerTemplate.Test.csproj", "{4238F7DC-700E-46D2-B1EA-2C2A70E2F210}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate.Vsix", "AnalyzerTemplate\AnalyzerTemplate.Vsix\AnalyzerTemplate.Vsix.csproj", "{2F388774-7846-4C08-BAB0-53682F511440}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTemplate.Vsix", "Source\AnalyzerTemplate\AnalyzerTemplate.Vsix\AnalyzerTemplate.Vsix.csproj", "{2F388774-7846-4C08-BAB0-53682F511440}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTestCasesForExtensionTesting", "AnalyzerTestCasesForExtensionTesting\AnalyzerTestCasesForExtensionTesting.csproj", "{44512987-440F-4D8F-8012-E9C575F3E2FB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AnalyzerTestCasesForExtensionTesting", "Source\AnalyzerTestCasesForExtensionTesting\AnalyzerTestCasesForExtensionTesting.csproj", "{44512987-440F-4D8F-8012-E9C575F3E2FB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Source", "Source\Source", "{1CE90C14-5DBA-48A5-A3B6-896ED68B3CEB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -51,5 +53,13 @@ Global
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {07315937-5C62-46A0-A23F-B2BF1DEB08BE}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{222D058A-6844-4EA0-9DFC-052141EA4B06} = {1CE90C14-5DBA-48A5-A3B6-896ED68B3CEB}
+		{CE3AFBD9-4E58-4C08-9C15-327F63691319} = {1CE90C14-5DBA-48A5-A3B6-896ED68B3CEB}
+		{A4984373-2F31-4203-A095-A6DFE7B71FAE} = {1CE90C14-5DBA-48A5-A3B6-896ED68B3CEB}
+		{4238F7DC-700E-46D2-B1EA-2C2A70E2F210} = {1CE90C14-5DBA-48A5-A3B6-896ED68B3CEB}
+		{2F388774-7846-4C08-BAB0-53682F511440} = {1CE90C14-5DBA-48A5-A3B6-896ED68B3CEB}
+		{44512987-440F-4D8F-8012-E9C575F3E2FB} = {1CE90C14-5DBA-48A5-A3B6-896ED68B3CEB}
 	EndGlobalSection
 EndGlobal
